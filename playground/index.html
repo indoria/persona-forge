@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>PersonaNet AI System Blueprint</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+        }
+
+        nav {
+            background: #222;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        section {
+            padding: 30px 40px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #333;
+        }
+
+        pre {
+            background: #eee;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="#section1">System Design Plan</a>
+        <a href="#section2">Technical Blueprint</a>
+    </nav>
+<script>
+
+      function loadScript(src, callback) {
+    var script = document.createElement('script');
+    script.src = src;
+    script.onload = function() {
+      callback();
+    };
+    script.onerror = function() {
+      console.error('Failed to load script:', src);
+    };
+    document.head.appendChild(script);
+  }
+
+    (function() {
+  // Check if 'marked' is loaded
+  if (typeof marked === 'undefined') {
+    console.error('marked library is not loaded. Include it via CDN or npm.');
+    return;
+  }
+
+  /**
+   * Load a Markdown file via AJAX and render it inside a target element.
+   * @param {string} mdUrl - URL of the markdown file to fetch.
+   * @param {string} targetSelector - CSS selector of the target container to render HTML.
+   */
+  function loadAndRenderMarkdown(mdUrl, targetSelector) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', mdUrl, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          var markdown = xhr.responseText;
+          var html = marked.parse(markdown);
+          var targetElem = document.querySelector(targetSelector);
+          if (targetElem) {
+            targetElem.innerHTML = html;
+          } else {
+            console.error('Target element not found for selector:', targetSelector);
+          }
+        } else {
+          console.error('Failed to fetch markdown file:', mdUrl);
+        }
+      }
+    };
+    xhr.send();
+  }
+
+  // Expose method globally for usage
+  window.loadAndRenderMarkdown = loadAndRenderMarkdown;
+})();
+window.loadAndRenderMarkdown('example.md', '#md-content');
+
+</script>
+</body>
+</html>
