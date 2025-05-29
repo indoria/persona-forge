@@ -1,1 +1,462 @@
-PersonaForge
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Tabbed Markdown Content</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            flex-grow: 1;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Playfair Display', serif;
+            color: #2c3e50;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            text-align: center;
+            margin-bottom: 1.2em;
+            color: #1a2c3d;
+        }
+
+        h2 {
+            font-size: 2.2em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.3em;
+            margin-top: 2em;
+        }
+
+        h3 {
+            font-size: 1.8em;
+        }
+
+        h4 {
+            font-size: 1.4em;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .renderer-controls {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .renderer-controls button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 0 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+        }
+
+        .renderer-controls button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .renderer-controls button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 40px 0;
+        }
+
+        .tab-navigation {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-button {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 15px 25px;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            color: #555;
+            flex-shrink: 0;
+        }
+
+        .tab-button:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .tab-button.active {
+            color: #007bff;
+            border-bottom: 3px solid #007bff;
+            font-weight: 500;
+            background-color: #ffffff;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 0 0;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            border: 1px solid #e9ecef;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        pre {
+            background-color: #f4f6f8;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95em;
+            line-height: 1.4;
+            border: 1px solid #e0e0e0;
+        }
+
+        code {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #e6e8eb;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        ul,
+        ol {
+            margin-left: 25px;
+            margin-bottom: 1em;
+        }
+
+        ul li {
+            list-style-type: disc;
+            margin-bottom: 0.5em;
+        }
+
+        ol li {
+            list-style-type: decimal;
+            margin-bottom: 0.5em;
+        }
+
+        blockquote {
+            border-left: 4px solid #007bff;
+            padding-left: 20px;
+            margin: 1.5em 0;
+            color: #6a737d;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            color: #777;
+            font-size: 0.9em;
+            border-top: 1px solid #eee;
+            background-color: #f0f2f5;
+            border-radius: 8px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+
+            .container {
+                padding: 20px 25px;
+            }
+
+            h1 {
+                font-size: 2.2em;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            .tab-button {
+                padding: 12px 18px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Dynamic Tabbed Markdown Content</h1>
+
+        <div class="renderer-controls">
+            <button id="useMarkdownJS">Use markdown.js</button>
+            <button id="useShowdownJS">Use Showdown.js</button>
+            <button id="useMarkdownItJS">Use markdown-it</button>
+            <button id="loadAllContent">Reload Current Tab</button>
+        </div>
+
+        <hr>
+
+        <div id="tabContainer">
+            <div class="tab-navigation" id="tabNav">
+            </div>
+            <div class="tab-content-wrapper" id="tabContentWrapper">
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Example powered by MarkdownLoader (IIFE Revealing Module Pattern).</p>
+    </footer>
+
+    <script type="text/javascript" src="/js/md-loader.js"></script>
+    <script>
+        (function () {
+            const MarkdownTabsModule = (function () {
+                let currentPathPrefix = '';
+                let currentTabFiles = [];
+                let markdownFilesConfig = [];
+
+                function normalizeName(name) {
+                    return name.replace(/^[0-9]+-/, '').replace(/-/g, ' ');
+                }
+
+                async function createTabbedMarkdownContent(fileBaseNames, pathPrefix) {
+                    const tabNav = document.getElementById('tabNav');
+                    const tabContentWrapper = document.getElementById('tabContentWrapper');
+                    const filesConfig = [];
+
+                    if (!tabNav || !tabContentWrapper) {
+                        console.error('Tab navigation or content wrapper elements not found.');
+                        return;
+                    }
+
+                    tabNav.innerHTML = '';
+                    tabContentWrapper.innerHTML = '';
+
+                    fileBaseNames.forEach((baseName, index) => {
+                        const sectionId = `section${baseName.replace(/-/g, '')}`;
+                        const tabButtonId = `${baseName}-tab`;
+                        const markdownFilePath = `${pathPrefix}/${baseName}.md`;
+                        const tabTitle = normalizeName(baseName);
+
+                        const button = document.createElement('button');
+                        button.classList.add('tab-button');
+                        button.id = tabButtonId;
+                        button.textContent = tabTitle;
+                        button.setAttribute('data-target-tab', sectionId);
+                        tabNav.appendChild(button);
+
+                        const contentDiv = document.createElement('div');
+                        contentDiv.classList.add('tab-content');
+                        contentDiv.id = sectionId;
+                        contentDiv.innerHTML = `<p>Loading ${tabTitle} content...</p>`;
+                        tabContentWrapper.appendChild(contentDiv);
+
+                        filesConfig.push({ filePath: markdownFilePath, targetId: sectionId });
+
+                        button.addEventListener('click', () => {
+                            openTab(event, sectionId);
+                            MarkdownLoader.loadMarkdownFile(markdownFilePath, `#${sectionId}`);
+                        });
+                    });
+
+                    markdownFilesConfig = filesConfig;
+
+                    console.log('Loading all markdown files for tabs:', filesConfig);
+                    await MarkdownLoader.loadMultipleMarkdownFiles(filesConfig);
+
+                    if (fileBaseNames.length > 0) {
+                        const firstTabButton = document.getElementById(`${fileBaseNames[0]}-tab`);
+                        if (firstTabButton) {
+                            firstTabButton.click();
+                        }
+                    }
+                }
+
+                function openTab(evt, tabId) {
+                    let i, tabcontent, tablinks;
+
+                    tabcontent = document.getElementsByClassName("tab-content");
+                    for (i = 0; i < tabcontent.length; i++) {
+                        tabcontent[i].classList.remove("active");
+                    }
+
+                    tablinks = document.getElementsByClassName("tab-button");
+                    for (i = 0; i < tablinks.length; i++) {
+                        tablinks[i].classList.remove("active");
+                    }
+
+                    document.getElementById(tabId).classList.add("active");
+                    if (evt) {
+                        evt.currentTarget.classList.add("active");
+                    } else {
+                        const btn = document.querySelector(`.tab-button[data-target-tab="${tabId}"]`);
+                        if (btn) btn.classList.add("active");
+                    }
+                }
+
+                async function init(pathPrefix, tabFiles) {
+                    currentPathPrefix = pathPrefix;
+                    currentTabFiles = tabFiles;
+
+                    await MarkdownLoader.init('markdown-it');
+                    await createTabbedMarkdownContent(currentTabFiles, currentPathPrefix);
+                    attachEventListeners();
+                }
+
+                async function switchContent(newPathPrefix, newTabFiles) {
+                    console.log('Switching content...');
+                    currentPathPrefix = newPathPrefix;
+                    currentTabFiles = newTabFiles;
+                    await createTabbedMarkdownContent(currentTabFiles, currentPathPrefix);
+                }
+
+                function attachEventListeners() {
+                    document.getElementById('useMarkdownJS')?.addEventListener('click', async () => {
+                        console.log('Switching to markdown.js');
+                        await MarkdownLoader.setRenderer('markdown');
+                        await createTabbedMarkdownContent(currentTabFiles, currentPathPrefix);
+                    });
+
+                    document.getElementById('useShowdownJS')?.addEventListener('click', async () => {
+                        console.log('Switching to Showdown.js');
+                        await MarkdownLoader.setRenderer('showdown');
+                        await createTabbedMarkdownContent(currentTabFiles, currentPathPrefix);
+                    });
+
+                    document.getElementById('useMarkdownItJS')?.addEventListener('click', async () => {
+                        console.log('Switching to markdown-it');
+                        await MarkdownLoader.setRenderer('markdown-it');
+                        await createTabbedMarkdownContent(currentTabFiles, currentPathPrefix);
+                    });
+
+                    document.getElementById('loadAllContent')?.addEventListener('click', async () => {
+                        console.log('Reloading content for active tab with current renderer...');
+                        const activeTabContent = document.querySelector('.tab-content.active');
+                        if (activeTabContent) {
+                            const activeTabConfig = markdownFilesConfig.find(config => config.targetId === activeTabContent.id);
+                            if (activeTabConfig) {
+                                activeTabContent.innerHTML = 'Reloading...';
+                                await MarkdownLoader.loadMarkdownFile(activeTabConfig.filePath, `#${activeTabConfig.targetId}`);
+                                console.log(`Tab '${activeTabConfig.targetId}' reloaded.`);
+                            }
+                        }
+                    });
+                }
+
+                return {
+                    init: init,
+                    switchContent: switchContent
+                };
+            })();
+
+            async function loadPlayground() {
+                const defaultPathPrefix = '/data/playground';
+                const defaultTabFiles = [
+                    '1-1-design',
+                    '1-2-features',
+                    '1-3-prompt',
+                    '1-4-deep_dive',
+                    '1-5-prompt-engg',
+                    '2-1-overview',
+                    '2-2-blueprint'
+                ];
+
+                await MarkdownTabsModule.init(defaultPathPrefix, defaultTabFiles);
+            }
+
+            async function loadGemini() {
+                const defaultPathPrefix = '/data/gemini';
+                const defaultTabFiles = [
+                    '1-0-resources',
+                    '1-1-design',
+                    '1-2-persona-orchestration',
+                    '1-3-llm-module',
+                    '1-4-guide',
+                    '1-5-prerequisites'
+                ];
+
+                await MarkdownTabsModule.init(defaultPathPrefix, defaultTabFiles);
+            }
+
+            document.addEventListener('DOMContentLoaded', async () => {
+                await loadGemini();
+            });
+        })();
+    </script>
+</body>
+
+</html>

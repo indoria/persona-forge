@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Architecture Diagram</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .diagram-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 1000px; /* Max width for larger screens */
+            box-sizing: border-box;
+        }
+
+        svg {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #ffffff;
+            width: 100%; /* Make SVG responsive */
+            height: auto; /* Maintain aspect ratio */
+            min-height: 400px; /* Minimum height for visibility */
+        }
+
+        /* SVG Element Styles */
+        .module-box {
+            fill: #e6f7ff; /* Light blue */
+            stroke: #3498db; /* Blue border */
+            stroke-width: 2;
+            transition: fill 0.3s ease, stroke 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+            border-radius: 8px; /* For hover effect, though SVG rects don't have CSS border-radius */
+        }
+
+        .module-box:hover {
+            fill: #cceeff; /* Lighter blue on hover */
+            stroke: #2980b9; /* Darker blue border on hover */
+            transform: translateY(-3px);
+        }
+
+        .module-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            fill: #2c3e50; /* Dark text */
+            text-anchor: middle;
+            dominant-baseline: middle;
+            pointer-events: none; /* Allow clicks to pass through to the rect */
+        }
+
+        .interaction-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            fill: #27ae60; /* Green for interactions */
+            text-anchor: middle;
+            dominant-baseline: middle;
+            cursor: pointer;
+            transition: fill 0.3s ease;
+        }
+
+        .interaction-text:hover {
+            fill: #229954; /* Darker green on hover */
+        }
+
+        .arrow-line {
+            stroke: #7f8c8d; /* Grey for arrows */
+            stroke-width: 2;
+            marker-end: url(#arrowhead);
+        }
+
+        /* Arrowhead Definition */
+        #arrowhead {
+            fill: #7f8c8d;
+        }
+
+        .message-box {
+            margin-top: 20px;
+            padding: 15px 25px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: center;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            width: 90%;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Architecture Diagram</h1>
+
+    <div class="diagram-container">
+        <svg viewBox="0 0 800 500">
+            <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" />
+                </marker>
+            </defs>
+
+            <rect id="module-requirements" class="module-box" x="50" y="50" width="150" height="70" rx="10" ry="10" />
+            <text x="125" y="85" class="module-text">Requirements</text>
+
+            <rect id="module-design" class="module-box" x="250" y="50" width="150" height="70" rx="10" ry="10" />
+            <text x="325" y="85" class="module-text">Design</text>
+
+            <rect id="module-implementation" class="module-box" x="450" y="50" width="150" height="70" rx="10" ry="10" />
+            <text x="525" y="85" class="module-text">Implementation</text>
+
+            <rect id="module-testing" class="module-box" x="650" y="50" width="100" height="70" rx="10" ry="10" />
+            <text x="700" y="85" class="module-text">Testing</text>
+
+
+            <rect id="module-frontend" class="module-box" x="100" y="250" width="150" height="70" rx="10" ry="10" />
+            <text x="175" y="285" class="module-text">Frontend App</text>
+
+            <rect id="module-backend" class="module-box" x="300" y="250" width="150" height="70" rx="10" ry="10" />
+            <text x="375" y="285" class="module-text">Backend API</text>
+
+            <rect id="module-database" class="module-box" x="500" y="250" width="150" height="70" rx="10" ry="10" />
+            <text x="575" y="285" class="module-text">Database</text>
+
+
+            <line x1="200" y1="85" x2="250" y2="85" class="arrow-line" />
+            <text id="interaction-refinement" x="225" y="70" class="interaction-text">Refinement</text>
+
+            <line x1="400" y1="85" x2="450" y2="85" class="arrow-line" />
+            <text id="interaction-development" x="425" y="70" class="interaction-text">Development</text>
+
+            <line x1="600" y1="85" x2="650" y2="85" class="arrow-line" />
+            <text id="interaction-validation" x="625" y="70" class="interaction-text">Validation</text>
+
+            <line x1="175" y1="120" x2="175" y2="250" class="arrow-line" />
+            <text id="interaction-build-ui" x="190" y="185" class="interaction-text">Build UI</text>
+
+            <line x1="375" y1="120" x2="375" y2="250" class="arrow-line" />
+            <text id="interaction-api-logic" x="390" y="185" class="interaction-text">API Logic</text>
+
+            <line x1="575" y1="120" x2="575" y2="250" class="arrow-line" />
+            <text id="interaction-data-schema" x="590" y="185" class="interaction-text">Data Schema</text>
+
+            <line x1="250" y1="285" x2="300" y2="285" class="arrow-line" />
+            <text id="interaction-api-calls" x="275" y="270" class="interaction-text">API Calls</text>
+
+            <line x1="450" y1="285" x2="500" y2="285" class="arrow-line" />
+            <text id="interaction-data-access" x="475" y="270" class="interaction-text">Data Access</text>
+
+            <path d="M700 120 V 150 H 50 V 120" class="arrow-line" />
+            <text id="interaction-feedback-loop" x="375" y="140" class="interaction-text">Feedback Loop</text>
+
+        </svg>
+        <div id="messageBox" class="message-box">Click on a module or interaction to see details!</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const messageBox = document.getElementById('messageBox');
+
+            // Function to handle clicks on SVG elements
+            function handleClick(event) {
+                const clickedElement = event.target;
+                const elementId = clickedElement.id;
+                let message = `You clicked: `;
+
+                if (elementId) {
+                    // Check if it's a module box or interaction text
+                    if (elementId.startsWith('module-')) {
+                        message += `Module "${elementId.replace('module-', '').replace(/-/g, ' ')}"`;
+                    } else if (elementId.startsWith('interaction-')) {
+                        message += `Interaction "${elementId.replace('interaction-', '').replace(/-/g, ' ')}"`;
+                    } else {
+                        message += `Element with ID "${elementId}"`;
+                    }
+                } else {
+                    message += `an unidentifiable part of the diagram.`;
+                }
+                messageBox.textContent = message;
+                console.log(message); // Also log to console for debugging
+            }
+
+            const clickableElements = document.querySelectorAll(
+                '.module-box, .interaction-text'
+            );
+
+            clickableElements.forEach(element => {
+                element.addEventListener('click', handleClick);
+            });
+        });
+    </script>
+</body>
+</html>

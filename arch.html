@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Persona Architecture Diagram</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .diagram-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 95%; /* Slightly wider container */
+            max-width: 1200px; /* Max width for larger screens */
+            box-sizing: border-box;
+        }
+
+        svg {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #ffffff;
+            width: 100%;
+            height: auto;
+            min-height: 700px; /* Adjusted min-height to match new viewBox */
+        }
+
+        /* SVG Element Styles */
+        .module-box {
+            fill: #e6f7ff; /* Light blue */
+            stroke: #3498db; /* Blue border */
+            stroke-width: 2;
+            transition: fill 0.3s ease, stroke 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+            rx: 10; /* Rounded corners for SVG rect */
+            ry: 10;
+        }
+
+        .module-box:hover {
+            fill: #cceeff; /* Lighter blue on hover */
+            stroke: #2980b9; /* Darker blue border on hover */
+            transform: translateY(-3px);
+        }
+
+        .module-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px; /* Slightly larger font size */
+            fill: #2c3e50; /* Dark text */
+            text-anchor: middle;
+            dominant-baseline: middle;
+            pointer-events: none; /* Allow clicks to pass through to the rect */
+        }
+
+        .module-subtext {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px; /* Slightly larger font for subtext */
+            fill: #555;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            pointer-events: none;
+        }
+
+        .interaction-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px; /* Slightly larger font size */
+            fill: #27ae60; /* Green for interactions */
+            text-anchor: middle;
+            dominant-baseline: middle;
+            cursor: pointer;
+            transition: fill 0.3s ease;
+        }
+
+        .interaction-text:hover {
+            fill: #229954; /* Darker green on hover */
+        }
+
+        .arrow-line {
+            stroke: #7f8c8d; /* Grey for arrows */
+            stroke-width: 2;
+            marker-end: url(#arrowhead);
+            fill: none; /* Paths should not be filled */
+        }
+
+        /* Arrowhead Definition */
+        #arrowhead {
+            fill: #7f8c8d;
+        }
+
+        .message-box {
+            margin-top: 20px;
+            padding: 15px 25px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: center;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            width: 90%;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Persona Architecture Diagram</h1>
+
+    <div class="diagram-container">
+        <svg viewBox="0 0 1000 700"> <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7" />
+                </marker>
+            </defs>
+
+            <rect id="module-persona-database" class="module-box" x="50" y="100" width="150" height="90" />
+            <text x="125" y="130" class="module-text">Persona</text>
+            <text x="125" y="150" class="module-text">Database</text>
+            <text x="125" y="170" class="module-subtext">e.g. Jordan Peterson</text>
+
+            <rect id="module-persona-embedding" class="module-box" x="280" y="100" width="150" height="100" />
+            <text x="355" y="130" class="module-text">Persona-</text>
+            <text x="355" y="150" class="module-text">embedding</text>
+            <text x="355" y="170" class="module-subtext">generate</text>
+            <text x="355" y="185" class="module-subtext">embeddings</text>
+
+            <rect id="module-language-model" class="module-box" x="510" y="100" width="220" height="90" />
+            <text x="620" y="145" class="module-text">Language Model</text>
+
+            <rect id="module-mode-behavior" class="module-box" x="510" y="280" width="220" height="100" />
+            <text x="620" y="310" class="module-text">Mode Behavior</text>
+            <text x="620" y="330" class="module-text">Module</text>
+            <text x="620" y="355" class="module-subtext">Educator, Critic</text>
+
+            <rect id="module-memory" class="module-box" x="280" y="380" width="180" height="80" />
+            <text x="370" y="410" class="module-text">Memory</text>
+            <text x="370" y="430" class="module-text">Module</text>
+
+            <rect id="module-persona-interaction" class="module-box" x="510" y="480" width="220" height="100" />
+            <text x="620" y="510" class="module-text">Persona</text>
+            <text x="620" y="530" class="module-text">Interaction</text>
+            <text x="620" y="550" class="module-text">Interface</text>
+            <text x="620" y="570" class="module-subtext">Text, Voice</text>
+
+            <rect id="module-persona-fidelity" class="module-box" x="780" y="280" width="180" height="120" />
+            <text x="870" y="310" class="module-text">Persona</text>
+            <text x="870" y="330" class="module-text">Fidelity</text>
+            <text x="870" y="350" class="module-text">Module</text>
+            <text x="870" y="370" class="module-subtext">memory, beliefs,</text>
+            <text x="870" y="385" class="module-subtext">domain knowledge</text>
+
+            <rect id="module-user-settings" class="module-box" x="50" y="480" width="180" height="110" />
+            <text x="140" y="510" class="module-text">User</text>
+            <text x="140" y="530" class="module-text">Settings</text>
+            <text x="140" y="550" class="module-subtext">humor, usage,</text>
+            <text x="140" y="565" class="module-subtext">OCEAN</text>
+
+            <line x1="200" y1="145" x2="280" y2="145" class="arrow-line" />
+
+            <line x1="430" y1="145" x2="510" y2="145" class="arrow-line" />
+
+            <line x1="620" y1="190" x2="620" y2="280" class="arrow-line" />
+            <text id="interaction-mode" x="635" y="235" class="interaction-text">mode</text>
+
+            <line x1="730" y1="145" x2="870" y2="145" class="arrow-line" />
+            <line x1="870" y1="145" x2="870" y2="280" class="arrow-line" />
+            <text id="interaction-queries" x="800" y="130" class="interaction-text">queries</text>
+
+            <line x1="510" y1="330" x2="460" y2="330" class="arrow-line" />
+            <line x1="460" y1="330" x2="460" y2="380" class="arrow-line" />
+            <text id="interaction-memory" x="485" y="355" class="interaction-text">memory</text>
+
+            <line x1="620" y1="380" x2="620" y2="480" class="arrow-line" />
+            <text id="interaction-fidelity-features" x="635" y="430" class="interaction-text">fidelity features</text>
+
+            <line x1="730" y1="530" x2="780" y2="340" class="arrow-line" />
+            <text id="interaction-response" x="755" y="430" class="interaction-text">response</text>
+
+            <line x1="140" y1="480" x2="140" y2="440" class="arrow-line" />
+            <line x1="140" y1="440" x2="280" y2="440" class="arrow-line" />
+            <text id="interaction-setting" x="210" y="425" class="interaction-text">setting</text>
+
+            <line x1="230" y1="535" x2="510" y2="535" class="arrow-line" />
+            <text id="interaction-settings" x="370" y="550" class="interaction-text">settings</text>
+
+            <path d="M370 380 V 300 H 780 V 310" class="arrow-line" />
+            <text id="interaction-memory-fidelity" x="575" y="290" class="interaction-text">memory, beliefs, domain knowledge</text>
+
+
+        </svg>
+        <div id="messageBox" class="message-box">Click on a module or interaction to see details!</div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const messageBox = document.getElementById('messageBox');
+
+            function handleClick(event) {
+                const clickedElement = event.target;
+                const elementId = clickedElement.id;
+                let message = `You clicked: `;
+
+                if (elementId) {
+                    if (elementId.startsWith('module-')) {
+                        message += `Module "${elementId.replace('module-', '').replace(/-/g, ' ')}"`;
+                    } else if (elementId.startsWith('interaction-')) {
+                        message += `Interaction "${elementId.replace('interaction-', '').replace(/-/g, ' ')}"`;
+                    } else {
+                        message += `Element with ID "${elementId}"`;
+                    }
+                } else {
+                    message += `an unidentifiable part of the diagram.`;
+                }
+                messageBox.textContent = message;
+                console.log(message);
+            }
+
+            const clickableElements = document.querySelectorAll(
+                '.module-box, .interaction-text'
+            );
+
+            clickableElements.forEach(element => {
+                element.addEventListener('click', handleClick);
+            });
+        });
+    </script>
+</body>
+</html>
