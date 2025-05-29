@@ -1,0 +1,61 @@
+```mermaid
+classDiagram
+    class Auth {
+        +request_otp(email, phone)
+        +verify_otp(email, phone, otp)
+    }
+
+    class Persona {
+        +get_predefined_personas()
+        +create_persona(user_id, name, description, training_data)
+        +get_user_personas(user_id)
+        +persona_to_dict(persona)
+    }
+
+    class Mode {
+        +get_mode(mode_name)
+    }
+
+    class KnowledgeBase {
+        +add_kb_entry(user_id, question, answer)
+        +get_kb_entries(user_id)
+        +update_kb_entry(entry_id, user_id, question, answer)
+        +delete_kb_entry(entry_id, user_id)
+    }
+
+    class NLP {
+        +preprocess(text)
+        +classify_intent(text, vectorizer, classifier)
+        +extract_entities(text)
+    }
+
+    class Conversation {
+        +generate_response(user_input, persona, mode, user_id, kb_entries)
+    }
+
+    class Models {
+        +User
+        +OTP
+        +Persona
+        +KnowledgeEntry
+    }
+
+    Auth <.. Backend_Views : uses
+    Persona <.. Backend_Views : uses
+    Mode <.. Backend_Views : uses
+    KnowledgeBase <.. Backend_Views : uses
+    NLP <.. Conversation : uses
+    Models <.. Backend_Views : uses
+    Models <.. Auth : uses
+    Models <.. Persona : uses
+    Models <.. KnowledgeBase : uses
+    Conversation <.. Backend_Views : uses
+
+    class Backend_Views {
+        +user_views
+        +persona_views
+        +kb_views
+        +conversation_views
+        +nlp_views
+    }
+```

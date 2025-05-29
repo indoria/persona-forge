@@ -1,0 +1,17 @@
+```mermaid
+flowchart TD
+    U[User Input] --> F[Frontend JS]
+    F -->|REST API call (JWT)| B[Backend Flask]
+    B -->|Parse JWT, get user info| A[Auth/JWT Module]
+    B -->|Fetch persona details| P[Persona Module]
+    B -->|Fetch selected mode config| M[Mode Module]
+    B -->|Fetch knowledge base entries| K[Knowledge Base Module]
+    B -->|NLP processing (spaCy, NLTK)| N[NLP Module]
+    N -->|Extract tokens, entities, intent| B
+    B -->|Search KB for matching Q| K
+    K -->|If match: return answer| B
+    B -->|If no match: use persona, mode, NLP| C[Conversation Module]
+    C -->|Generate response| B
+    B -->|Send JSON response| F
+    F -->|Display response| U
+```

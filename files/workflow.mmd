@@ -1,0 +1,27 @@
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant B as Backend
+    participant DB as Database
+
+    U->>F: Enter email/phone
+    F->>B: POST /auth/request_otp
+    B->>DB: Find or create user, store OTP
+    B-->>U: "OTP sent" (via F)
+
+    U->>F: Enter OTP
+    F->>B: POST /auth/verify_otp
+    B->>DB: Verify OTP
+    B-->>F: JWT token
+
+    U->>F: Select persona, mode, type message
+    F->>B: POST /conversation/
+    B->>DB: Fetch persona, KB
+    B->>B: NLP analysis & response generation
+    B-->>F: AI response
+
+    U->>F: Manage KB/personas
+    F->>B: (CRUD API requests)
+    B->>DB: Update/read as needed
+```

@@ -1,0 +1,29 @@
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant B as Backend Controller
+    participant P as Persona Module
+    participant M as Mode Module
+    participant K as Knowledge Base Module
+    participant N as NLP Module
+    participant C as Conversation Module
+
+    U->>F: Type prompt (e.g., "Tell me about branding strategies.")
+    F->>B: Send prompt, persona, mode (raw input)
+    B->>P: Fetch persona settings (style, tone, language)
+    B->>M: Fetch conversation mode settings (e.g., educator)
+    B->>K: Fetch user's knowledge base entries
+    B->>N: Preprocess prompt (tokenize, lemmatize, extract entities)
+    N-->>B: Return preprocessed input (lemmas, entities)
+    B->>K: Match preprocessed input with KB entries
+    alt KB Match Found
+        K-->>B: Return KB answer
+        B->>C: Format response using persona/mode style, KB answer
+    else No KB Match
+        B->>C: Compose response using persona/mode, NLP output
+    end
+    C-->>B: Final AI response (persona/mode flavored)
+    B-->>F: Return response
+    F-->>U: Show persona-styled answer
+```

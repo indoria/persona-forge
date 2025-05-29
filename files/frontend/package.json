@@ -1,0 +1,14 @@
+{
+  "name": "aipersonas-frontend",
+  "version": "1.0.0",
+  "description": "Frontend for AI Personas Web App",
+  "scripts": {
+    "start": "serve -s .",
+    "dev": "live-server --port=3000"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "serve": "^14.0.1",
+    "live-server": "^1.2.2"
+  }
+}

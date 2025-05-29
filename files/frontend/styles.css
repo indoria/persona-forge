@@ -1,0 +1,57 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  padding: 0;
+}
+nav {
+  background: #222;
+  color: #fff;
+  padding: 1em;
+}
+nav a {
+  color: #fff;
+  margin-right: 1.5em;
+  text-decoration: none;
+}
+main {
+  margin: 2em auto;
+  max-width: 600px;
+  background: #fff;
+  padding: 2em;
+  border-radius: 8px;
+}
+#chat-log {
+  background: #eee;
+  height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1em;
+  padding: 1em;
+  border-radius: 4px;
+}
+.user-msg {
+  text-align: right;
+  color: blue;
+  margin-bottom: 0.5em;
+}
+.ai-msg {
+  text-align: left;
+  color: darkgreen;
+  margin-bottom: 0.5em;
+}
+button {
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  border: 1px solid #222;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+}
+input, select {
+  padding: 0.5em;
+  margin-bottom: 1em;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}

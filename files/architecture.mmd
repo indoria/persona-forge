@@ -1,0 +1,9 @@
+```mermaid
+graph TD
+    User-->|Web Browser|Frontend[Frontend (HTML/CSS/JS)]
+    Frontend-->|REST API (JWT)|Backend[Flask Backend]
+    Backend-->|SQL ORM|DB[(PostgreSQL DB)]
+    Backend-->|NLP/ML|NLP[NLP/ML Modules<br/>(spaCy, NLTK, scikit-learn)]
+    Backend-->|Persona/KB modules|Modules[Persona, Mode, Knowledge Base]
+    Backend-->|JWT|Auth[JWT Authentication]
+```

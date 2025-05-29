@@ -24,6 +24,24 @@ const MarkdownLoader = (function() {
         });
     }
 
+    async function _initializeMermaid() {
+        if (typeof window.mermaid !== 'undefined') {
+            if (!window.mermaid.__initialized) {
+                try {
+                    window.mermaid.initialize({
+                        startOnLoad: false,
+                        theme: 'default'
+                    });
+                    window.mermaid.__initialized = true;
+                } catch (e) {
+                    console.warn("Mermaid.js initialization failed or already initialized:", e);
+                }
+            }
+        } else {
+            console.warn("Mermaid.js not loaded. Cannot initialize.");
+        }
+    }
+
     async function setRenderer(rendererName) {
         if (currentRendererName === rendererName && rendererInstance) {
             return;
@@ -33,6 +51,9 @@ const MarkdownLoader = (function() {
         rendererInstance = null;
 
         try {
+            await _loadScript('https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js');
+            await _initializeMermaid();
+
             switch (rendererName) {
                 case 'markdown':
                     await _loadScript('https://cdnjs.cloudflare.com/ajax/libs/markdown.js/0.5.0/markdown.min.js');
@@ -45,7 +66,17 @@ const MarkdownLoader = (function() {
                 case 'showdown':
                     await _loadScript('https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js');
                     if (typeof window.showdown !== 'undefined') {
-                        rendererInstance = new window.showdown.Converter();
+                        // Showdown.js custom extension for Mermaid
+                        showdown.extension('mermaid', function() {
+                            return [{
+                                type: 'lang',
+                                regex: '```mermaid\\n([\\s\\S]*?)\\n```',
+                                replace: function(s, match) {
+                                    return '<pre class="mermaid">' + match + '</pre>';
+                                }
+                            }];
+                        });
+                        rendererInstance = new window.showdown.Converter({ extensions: ['mermaid'] });
                     } else {
                         throw new Error("showdown.js global object 'showdown' not found.");
                     }
@@ -53,7 +84,22 @@ const MarkdownLoader = (function() {
                 case 'markdown-it':
                     await _loadScript('https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js');
                     if (typeof window.markdownit !== 'undefined') {
-                        rendererInstance = new window.markdownit();
+                        const md = new window.markdownit({
+                            html: true,
+                            linkify: true,
+                            typographer: true
+                        });
+
+                        const defaultFenceRender = md.renderer.rules.fence;
+                        md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+                            const token = tokens[idx];
+                            if (token.info === 'mermaid') {
+                                return `<pre class="mermaid">${token.content}</pre>`;
+                            }
+                            return defaultFenceRender(tokens, idx, options, env, self);
+                        };
+
+                        rendererInstance = md;
                     } else {
                         throw new Error("markdown-it.js global object 'markdownit' not found.");
                     }
@@ -76,16 +122,23 @@ const MarkdownLoader = (function() {
             throw new Error("No Markdown renderer is set. Call setRenderer() first.");
         }
 
+        let htmlContent;
         switch (currentRendererName) {
             case 'markdown':
-                return rendererInstance.toHTML(markdownText);
+                htmlContent = markdownText.replace(/```mermaid\n([\s\S]*?)\n```/g, '<pre class="mermaid">$1</pre>');
+                htmlContent = rendererInstance.toHTML(htmlContent);
+                break;
             case 'showdown':
-                return rendererInstance.makeHtml(markdownText);
+                htmlContent = rendererInstance.makeHtml(markdownText);
+                break;
             case 'markdown-it':
-                return rendererInstance.render(markdownText);
+                htmlContent = rendererInstance.render(markdownText);
+                break;
             default:
-                return markdownText;
+                htmlContent = markdownText;
+                break;
         }
+        return htmlContent;
     }
 
     async function loadMarkdownFile(filePath, target) {
@@ -114,6 +167,13 @@ const MarkdownLoader = (function() {
             }
             const markdownText = await response.text();
             targetElement.innerHTML = convertToHtml(markdownText);
+
+            if (typeof window.mermaid !== 'undefined' && window.mermaid.__initialized) {
+                window.mermaid.run({
+                    querySelector: `#${targetElement.id} .mermaid`,
+                    suppressErrors: true
+                });
+            }
         } catch (error) {
             console.error(`Error loading or rendering '${filePath}':`, error);
             targetElement.innerHTML = `<p style="color: red;">Error loading content: ${error.message}</p>`;
@@ -126,7 +186,7 @@ const MarkdownLoader = (function() {
             return;
         }
 
-        const promises = filesConfig.map(config => {
+        const promises = filesConfig.map(async config => {
             const targetElement = document.getElementById(config.targetId);
             if (!targetElement) {
                 console.warn(`Skipping markdown file '${config.filePath}': Target element with ID '${config.targetId}' not found.`);
@@ -135,14 +195,20 @@ const MarkdownLoader = (function() {
             return loadMarkdownFile(config.filePath, targetElement);
         });
 
-        return Promise.allSettled(promises);
+        const results = await Promise.allSettled(promises);
+
+        if (typeof window.mermaid !== 'undefined' && window.mermaid.__initialized) {
+            window.mermaid.run();
+        }
+
+        return results;
     }
 
     return {
         setRenderer: setRenderer,
         loadMarkdownFile: loadMarkdownFile,
         loadMultipleMarkdownFiles: loadMultipleMarkdownFiles,
-        init: async function(defaultRenderer = 'markdown-it') {
+        init: async function(defaultRenderer = 'markdown') {
             await setRenderer(defaultRenderer);
         }
     };

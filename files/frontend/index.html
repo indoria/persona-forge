@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Personas - Chat</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav>
+    <a href="login.html">Login</a>
+    <a href="index.html">Chat</a>
+    <a href="#" id="personas-link">Personas</a>
+    <a href="#" id="kb-link">Knowledge Base</a>
+  </nav>
+  <main>
+    <section id="chat-section">
+      <h1>Chat with AI Persona</h1>
+      <select id="persona-select"></select>
+      <select id="mode-select">
+        <option value="educator">Educator</option>
+        <option value="interviewer">Interviewer</option>
+        <option value="critic">Critic</option>
+      </select>
+      <div id="chat-log"></div>
+      <input type="text" id="user-input" placeholder="Type your message..." />
+      <button id="send-btn">Send</button>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

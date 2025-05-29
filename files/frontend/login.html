@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Personas - Login</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <section id="login-section">
+      <h1>Login with Email or Phone</h1>
+      <form id="login-form">
+        <input type="email" id="email" placeholder="Email" />
+        <input type="tel" id="phone" placeholder="Phone" />
+        <button type="submit">Request OTP</button>
+      </form>
+      <form id="otp-form" style="display:none;">
+        <input type="text" id="otp" placeholder="Enter OTP" maxlength="6" />
+        <button type="submit">Verify OTP</button>
+      </form>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
