@@ -1,7 +1,21 @@
+// ... (previous code for StorageDrivers and MarkdownCache remains the same)
+
 const MarkdownLoader = (function() {
     let rendererInstance = null;
     let currentRendererName = null;
     const loadedScripts = {};
+
+    function _attachMermaidClickHandler(elementScope) {
+        const mermaidDivs = elementScope.querySelectorAll('.mermaid');
+        mermaidDivs.forEach(div => {
+            if (!div.hasAttribute('data-mermaid-click-handled')) {
+                div.addEventListener('click', (event) => {
+                    div.classList.contains("fullscreen") ? div.classList.remove("fullscreen") : div.classList.add("fullscreen");
+                });
+                div.setAttribute('data-mermaid-click-handled', 'true');
+            }
+        });
+    }
 
     async function _loadScript(src) {
         return new Promise((resolve, reject) => {
@@ -17,7 +31,6 @@ const MarkdownLoader = (function() {
                 resolve();
             };
             script.onerror = () => {
-                console.error('Failed to load script:', src);
                 reject(new Error(`Failed to load script: ${src}`));
             };
             document.head.appendChild(script);
@@ -51,7 +64,7 @@ const MarkdownLoader = (function() {
         rendererInstance = null;
 
         try {
-            await _loadScript('https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js');
+            await _loadScript('https://cdn.jsdelivr.net/npm/mermaid@10.8.0/dist/mermaid.min.js');
             await _initializeMermaid();
 
             switch (rendererName) {
@@ -66,17 +79,18 @@ const MarkdownLoader = (function() {
                 case 'showdown':
                     await _loadScript('https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js');
                     if (typeof window.showdown !== 'undefined') {
-                        // Showdown.js custom extension for Mermaid
                         showdown.extension('mermaid', function() {
                             return [{
                                 type: 'lang',
                                 regex: '```mermaid\\n([\\s\\S]*?)\\n```',
                                 replace: function(s, match) {
-                                    return '<pre class="mermaid">' + match + '</pre>';
+                                    return '<div class="mermaid">' + match + '</div>';
                                 }
                             }];
                         });
-                        rendererInstance = new window.showdown.Converter({ extensions: ['mermaid'] });
+                        rendererInstance = new window.showdown.Converter({
+                            extensions: ['mermaid']
+                        });
                     } else {
                         throw new Error("showdown.js global object 'showdown' not found.");
                     }
@@ -94,7 +108,7 @@ const MarkdownLoader = (function() {
                         md.renderer.rules.fence = (tokens, idx, options, env, self) => {
                             const token = tokens[idx];
                             if (token.info === 'mermaid') {
-                                return `<pre class="mermaid">${token.content}</pre>`;
+                                return `<div class="mermaid">${token.content}</div>`;
                             }
                             return defaultFenceRender(tokens, idx, options, env, self);
                         };
@@ -125,7 +139,7 @@ const MarkdownLoader = (function() {
         let htmlContent;
         switch (currentRendererName) {
             case 'markdown':
-                htmlContent = markdownText.replace(/```mermaid\n([\s\S]*?)\n```/g, '<pre class="mermaid">$1</pre>');
+                htmlContent = markdownText.replace(/```mermaid\n([\s\S]*?)\n```/g, '<div class="mermaid">$1</div>');
                 htmlContent = rendererInstance.toHTML(htmlContent);
                 break;
             case 'showdown':
@@ -156,16 +170,24 @@ const MarkdownLoader = (function() {
 
         if (!rendererInstance) {
             targetElement.innerHTML = `<p style="color: red;">Error: Markdown renderer not initialized. Please ensure a renderer is set before loading files.</p>`;
-            console.error("Markdown renderer not initialized. Call setRenderer() first.");
             return;
         }
 
         try {
-            const response = await fetch(filePath);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status} for ${filePath}`);
+            let markdownText = await MarkdownCache.get(filePath);
+
+            if (markdownText) {
+                console.log(`[Cache Hit] Serving ${filePath} from cache.`);
+            } else {
+                console.log(`[Cache Miss] Fetching ${filePath} from network.`);
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status} for ${filePath}`);
+                }
+                markdownText = await response.text();
+                await MarkdownCache.set(filePath, markdownText);
             }
-            const markdownText = await response.text();
+
             targetElement.innerHTML = convertToHtml(markdownText);
 
             if (typeof window.mermaid !== 'undefined' && window.mermaid.__initialized) {
@@ -174,6 +196,9 @@ const MarkdownLoader = (function() {
                     suppressErrors: true
                 });
             }
+
+            _attachMermaidClickHandler(targetElement);
+
         } catch (error) {
             console.error(`Error loading or rendering '${filePath}':`, error);
             targetElement.innerHTML = `<p style="color: red;">Error loading content: ${error.message}</p>`;
@@ -201,6 +226,8 @@ const MarkdownLoader = (function() {
             window.mermaid.run();
         }
 
+        _attachMermaidClickHandler(document);
+
         return results;
     }
 
@@ -208,7 +235,7 @@ const MarkdownLoader = (function() {
         setRenderer: setRenderer,
         loadMarkdownFile: loadMarkdownFile,
         loadMultipleMarkdownFiles: loadMultipleMarkdownFiles,
-        init: async function(defaultRenderer = 'markdown') {
+        init: async function(defaultRenderer = 'markdown-it') {
             await setRenderer(defaultRenderer);
         }
     };
