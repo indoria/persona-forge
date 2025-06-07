@@ -31,5 +31,9 @@ https://nextleap.app/online-compiler/reactjs-programming
 [Commands repo](https://www.commands.dev/)
 [Bash sheet](https://devhints.io/bash)
 
+https://studio.ai21.com/v2/workspaces
+
+https://dashboard.render.com/login
+
 
 [CodeDamn](https://codedamn.com/dashboard)
