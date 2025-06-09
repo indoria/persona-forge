@@ -4,10 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Tabbed Markdown Content</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Playfair+Display:wght@700&display=swap"
-        rel="stylesheet">
+    <title>Study guide</title>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -22,7 +19,6 @@
         }
 
         .container {
-            /*max-width: 1000px;*/
             width: 90%;
             margin: 0 auto;
             background-color: #ffffff;
@@ -269,22 +265,31 @@
         .container {
             position: relative;
         }
-        .versionSelector {
+
+        .version-selector {
             position: absolute;
-            top: 0;
-            right: 0;
+            top: 30px;
+            right: 40px;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            font-size: 1em;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .version-selector:hover {
+            border-color: #007bff;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <select class="versionSelector">
-            <option value="playground">version 1</option>
-            <option value="gemini">version 2</option>
-            <option value="huggingface">version 3</option>
-            <option value="hf-pr">version 4</option>
-        </select>
+        <div id="versionSelectorContainer"></div>
+
         <h1>Persona Forge Study Guide</h1>
 
         <div class="renderer-controls">
@@ -297,34 +302,76 @@
         <hr>
 
         <div id="tabContainer">
-            <div class="tab-navigation" id="tabNav">
-            </div>
-            <div class="tab-content-wrapper" id="tabContentWrapper">
-            </div>
+            <div class="tab-navigation" id="tabNav"></div>
+            <div class="tab-content-wrapper" id="tabContentWrapper"></div>
         </div>
     </div>
 
     <footer>
-        <p>Example powered by MarkdownLoader (IIFE Revealing Module Pattern).</p>
+        <p>Study Guide</p>
     </footer>
 
     <script type="text/javascript" src="/js/md-loader.js"></script>
     <script type="text/javascript" src="/js/cache.js"></script>
     <script>
         (function () {
+            const contentConfigurations = {
+                playground: {
+                    pathPrefix: '/data/playground',
+                    files: [
+                        '1-1-design', '1-2-features', '1-3-prompt', '1-4-deep_dive',
+                        '1-5-prompt-engg', '2-1-overview', '2-2-blueprint'
+                    ]
+                },
+                gemini: {
+                    pathPrefix: '/data/gemini',
+                    files: [
+                        '1-0-resources', '1-1-design', '1-2-persona-orchestration',
+                        '1-3-llm-module', '1-4-guide', '1-5-prerequisites'
+                    ]
+                },
+                huggingface: {
+                    pathPrefix: '/data/huggingface',
+                    files: [
+                        '1-0-plan', '1-1-overview', '1-2-dry-run', '1-3-persona-module',
+                        '1-4-conversation-engine-module', '1-5-nlp-module',
+                        '1-6-mood-influencers', '1-7-mode-module',
+                        '1-8-knowledge-base-module', '1-9-scikit', 'movie-script',
+                        'pr-of-product-release'
+                    ]
+                },
+                'hf-pr': {
+                    pathPrefix: '/data/hf-pr',
+                    files: [
+                        '1-0-overview', '1-1-persona-management', '1-2-pitch-analyser'
+                    ]
+                },
+                'ml-products': {
+                    pathPrefix: '/data/ml-products',
+                    files: ['index']
+                },
+                resources: {
+                    pathPrefix: '/data/resources',
+                    files: ['compute']
+                },
+                concepts: {
+                    pathPrefix: '/data/concepts',
+                    files: ['ai-sdlc', 'ai-sdlc-checklist', 'nlp', 'nlp-detail', 'prompts']
+                }
+            };
+
+            function normalizeName(name) {
+                return name.replace(/^[0-9]+-/, '').replace(/-/g, ' ');
+            }
+
             const MarkdownTabsModule = (function () {
                 let currentPathPrefix = '';
                 let currentTabFiles = [];
                 let markdownFilesConfig = [];
 
-                function normalizeName(name) {
-                    return name.replace(/^[0-9]+-/, '').replace(/-/g, ' ');
-                }
-
                 async function createTabbedMarkdownContent(fileBaseNames, pathPrefix) {
                     const tabNav = document.getElementById('tabNav');
                     const tabContentWrapper = document.getElementById('tabContentWrapper');
-                    const filesConfig = [];
 
                     if (!tabNav || !tabContentWrapper) {
                         console.error('Tab navigation or content wrapper elements not found.');
@@ -333,16 +380,15 @@
 
                     tabNav.innerHTML = '';
                     tabContentWrapper.innerHTML = '';
+                    markdownFilesConfig = [];
 
-                    fileBaseNames.forEach((baseName, index) => {
-                        const sectionId = `section${baseName.replace(/-/g, '')}`;
-                        const tabButtonId = `${baseName}-tab`;
+                    fileBaseNames.forEach((baseName) => {
+                        const sectionId = `section${baseName.replace(/[-\.]/g, '')}`;
                         const markdownFilePath = `${pathPrefix}/${baseName}.md`;
-                        const tabTitle = normalizeName(baseName);
+                        const tabTitle = normalizeName(baseName.replace(/\.md$/, ''));
 
                         const button = document.createElement('button');
                         button.classList.add('tab-button');
-                        button.id = tabButtonId;
                         button.textContent = tabTitle;
                         button.setAttribute('data-target-tab', sectionId);
                         tabNav.appendChild(button);
@@ -353,20 +399,18 @@
                         contentDiv.innerHTML = `<p>Loading ${tabTitle} content...</p>`;
                         tabContentWrapper.appendChild(contentDiv);
 
-                        filesConfig.push({ filePath: markdownFilePath, targetId: sectionId });
+                        markdownFilesConfig.push({ filePath: markdownFilePath, targetId: sectionId });
 
-                        button.addEventListener('click', () => {
+                        button.addEventListener('click', (event) => {
                             openTab(event, sectionId);
                             MarkdownLoader.loadMarkdownFile(markdownFilePath, `#${sectionId}`);
                         });
                     });
 
-                    markdownFilesConfig = filesConfig;
-
-                    await MarkdownLoader.loadMultipleMarkdownFiles(filesConfig);
+                    await MarkdownLoader.loadMultipleMarkdownFiles(markdownFilesConfig);
 
                     if (fileBaseNames.length > 0) {
-                        const firstTabButton = document.getElementById(`${fileBaseNames[0]}-tab`);
+                        const firstTabButton = tabNav.querySelector('.tab-button');
                         if (firstTabButton) {
                             firstTabButton.click();
                         }
@@ -374,17 +418,8 @@
                 }
 
                 function openTab(evt, tabId) {
-                    let i, tabcontent, tablinks;
-
-                    tabcontent = document.getElementsByClassName("tab-content");
-                    for (i = 0; i < tabcontent.length; i++) {
-                        tabcontent[i].classList.remove("active");
-                    }
-
-                    tablinks = document.getElementsByClassName("tab-button");
-                    for (i = 0; i < tablinks.length; i++) {
-                        tablinks[i].classList.remove("active");
-                    }
+                    document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+                    document.querySelectorAll(".tab-button").forEach(el => el.classList.remove("active"));
 
                     document.getElementById(tabId).classList.add("active");
                     if (evt) {
@@ -401,7 +436,6 @@
 
                     await MarkdownLoader.init('markdown-it');
                     await createTabbedMarkdownContent(currentTabFiles, currentPathPrefix);
-                    attachEventListeners();
                 }
 
                 async function switchContent(newPathPrefix, newTabFiles) {
@@ -411,114 +445,85 @@
                     await createTabbedMarkdownContent(currentTabFiles, currentPathPrefix);
                 }
 
-                function attachEventListeners() {
-                    document.getElementById('useMarkdownJS')?.addEventListener('click', async () => {
-                        console.log('Switching to markdown.js');
-                        await MarkdownLoader.setRenderer('markdown');
-                        await createTabbedMarkdownContent(currentTabFiles, currentPathPrefix);
-                    });
-
-                    document.getElementById('useShowdownJS')?.addEventListener('click', async () => {
-                        console.log('Switching to Showdown.js');
-                        await MarkdownLoader.setRenderer('showdown');
-                        await createTabbedMarkdownContent(currentTabFiles, currentPathPrefix);
-                    });
-
-                    document.getElementById('useMarkdownItJS')?.addEventListener('click', async () => {
-                        console.log('Switching to markdown-it');
-                        await MarkdownLoader.setRenderer('markdown-it');
-                        await createTabbedMarkdownContent(currentTabFiles, currentPathPrefix);
-                    });
-
-                    document.getElementById('loadAllContent')?.addEventListener('click', async () => {
-                        console.log('Reloading content for active tab with current renderer...');
-                        const activeTabContent = document.querySelector('.tab-content.active');
-                        if (activeTabContent) {
-                            const activeTabConfig = markdownFilesConfig.find(config => config.targetId === activeTabContent.id);
-                            if (activeTabConfig) {
-                                activeTabContent.innerHTML = 'Reloading...';
-                                await MarkdownLoader.loadMarkdownFile(activeTabConfig.filePath, `#${activeTabConfig.targetId}`);
-                                console.log(`Tab '${activeTabConfig.targetId}' reloaded.`);
-                            }
-                        }
-                    });
-                }
-
                 return {
                     init: init,
-                    switchContent: switchContent
+                    switchContent: switchContent,
+                    getMarkdownFilesConfig: () => markdownFilesConfig
                 };
             })();
 
-            async function loadPlayground() {
-                const defaultPathPrefix = '/data/playground';
-                const defaultTabFiles = [
-                    '1-1-design',
-                    '1-2-features',
-                    '1-3-prompt',
-                    '1-4-deep_dive',
-                    '1-5-prompt-engg',
-                    '2-1-overview',
-                    '2-2-blueprint'
-                ];
+            function createVersionSelector() {
+                const selectorContainer = document.getElementById('versionSelectorContainer');
+                const select = document.createElement('select');
+                select.className = 'version-selector';
+                select.id = 'versionSelector';
 
-                await MarkdownTabsModule.init(defaultPathPrefix, defaultTabFiles);
+                for (const key in contentConfigurations) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = normalizeName(key);
+                    select.appendChild(option);
+                }
+                selectorContainer.appendChild(select);
+
+                select.addEventListener('change', async (event) => {
+                    const selectedVersion = event.target.value;
+                    const config = contentConfigurations[selectedVersion];
+                    if (config) {
+                        await MarkdownTabsModule.switchContent(config.pathPrefix, config.files);
+                    } else {
+                        console.warn(`No configuration found for version: ${selectedVersion}`);
+                    }
+                });
+                return select;
             }
 
-            async function loadGemini() {
-                const defaultPathPrefix = '/data/gemini';
-                const defaultTabFiles = [
-                    '1-0-resources',
-                    '1-1-design',
-                    '1-2-persona-orchestration',
-                    '1-3-llm-module',
-                    '1-4-guide',
-                    '1-5-prerequisites'
+            function attachRendererEventListeners() {
+                const rendererControls = [
+                    { id: 'useMarkdownJS', renderer: 'markdown' },
+                    { id: 'useShowdownJS', renderer: 'showdown' },
+                    { id: 'useMarkdownItJS', renderer: 'markdown-it' }
                 ];
 
-                await MarkdownTabsModule.init(defaultPathPrefix, defaultTabFiles);
+                rendererControls.forEach(({ id, renderer }) => {
+                    document.getElementById(id)?.addEventListener('click', async () => {
+                        console.log(`Switching to ${renderer}.js`);
+                        await MarkdownLoader.setRenderer(renderer);
+                        const currentConfig = contentConfigurations[document.getElementById('versionSelector').value];
+                        if (currentConfig) {
+                            await MarkdownTabsModule.switchContent(currentConfig.pathPrefix, currentConfig.files);
+                        }
+                    });
+                });
+
+                document.getElementById('loadAllContent')?.addEventListener('click', async () => {
+                    console.log('Reloading content for active tab with current renderer...');
+                    const activeTabContent = document.querySelector('.tab-content.active');
+                    if (activeTabContent) {
+                        const activeTabConfig = MarkdownTabsModule.getMarkdownFilesConfig().find(config => config.targetId === activeTabContent.id);
+                        if (activeTabConfig) {
+                            activeTabContent.innerHTML = 'Reloading...';
+                            await MarkdownLoader.loadMarkdownFile(activeTabConfig.filePath, `#${activeTabConfig.targetId}`);
+                            console.log(`Tab '${activeTabConfig.targetId}' reloaded.`);
+                        }
+                    }
+                });
             }
-
-            async function loadHuggingFace() {
-                const defaultPathPrefix = '/data/huggingface';
-                const defaultTabFiles = [
-                    '1-0-plan',
-                    '1-1-overview',
-                    '1-2-dry-run',
-                    '1-3-persona-module',
-                    '1-4-conversation-engine-module',
-                    '1-5-nlp-module',
-                    '1-6-mood-influencers',
-                    '1-7-mode-module',
-                    '1-8-knowledge-base-module',
-                    '1-9-scikit',
-                    'movie-script',
-                    'pr-of-product-release'
-                ];
-
-                await MarkdownTabsModule.init(defaultPathPrefix, defaultTabFiles);
-            }
-
-            async function loadHfPr() {
-                const defaultPathPrefix = '/data/hf-pr';
-                const defaultTabFiles = [
-                    '1-0-overview',
-                    '1-1-persona-management',
-                    '1-2-pitch-analyser'
-                ];
-
-                await MarkdownTabsModule.init(defaultPathPrefix, defaultTabFiles);
-            }
-
-            document.querySelector(".versionSelector").addEventListener("change", async (e) => {
-                console.log(e.target.options);
-            })
 
             document.addEventListener('DOMContentLoaded', async () => {
-                await loadHfPr();
+                const versionSelector = createVersionSelector();
+                attachRendererEventListeners();
+
+                const initialVersion = 'concepts';
+                if (contentConfigurations[initialVersion]) {
+                    versionSelector.value = initialVersion;
+                    const config = contentConfigurations[initialVersion];
+                    await MarkdownTabsModule.init(config.pathPrefix, config.files);
+                } else {
+                    console.error(`Initial version '${initialVersion}' not found in configurations.`);
+                }
             });
         })();
     </script>
 </body>
-
 </html>
