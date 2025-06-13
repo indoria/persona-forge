@@ -6,11 +6,11 @@
 - NLP [How computer sees the semantics of text]
 - Bias introduction by interests, aversions, triggers [How persona would see it]
 
-3. Reasoning (What questions to ask, grade the pitch on defined parameters) few generic but mostly persona
+3. Knowledge base (extract relevant info with sections) {OR Knowledge Graph someday?} VectorDB vs GraphDB vs a hybrid combo.
+
+4. Reasoning (What questions to ask, grade the pitch on defined parameters) few generic but mostly persona
 - Generic grading parameters
 - Persona specific parameters (e.g. weight of interests)
-
-4. Knowledge base (extract relevant info with sections) {OR Knowledge Graph someday?}
 
 5. LLM (stitch a response) with tone elements from persona
 
@@ -18,6 +18,16 @@
 
 7. Response
 
+Entities : Journalist persona, pitch text.
+
+1. Decompose pitch into isolated ideas.
+2. Rank those ideas in term of following reactions.
+Acceptance
+Rejection
+Request for specifics
+Collaborative
+Inquisitory
+Explanatory
 
 ## Functional
 Reasoning
