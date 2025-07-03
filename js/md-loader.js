@@ -156,6 +156,7 @@ const MarkdownLoader = (function() {
     }
 
     async function loadMarkdownFile(filePath, target) {
+        filePath = filePath.replace(/^\/+/g, '');
         let targetElement;
         if (typeof target === 'string') {
             targetElement = document.querySelector(target);
