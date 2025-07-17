@@ -1,5 +1,41 @@
 Here's a progressive list of ML models from simplest to most complex, categorized by conceptual/intuitive complexity and implementation difficulty:
 
+We are going to list machine learning models in increasing order of complexity, starting from the simplest to more complex ones.
+1. **MP Neuron (McCulloch-Pitts Neuron)**: 
+   - The simplest form of an artificial neuron. It takes binary inputs and produces a binary output. It uses a threshold function. No learning involved; weights and threshold are set by hand.
+2. **Perceptron**:
+   - A step further from the MP neuron. It can learn from data by adjusting weights. It uses a step function as activation. It can only solve linearly separable problems.
+3. **Linear Regression**:
+   - A statistical model that predicts a continuous value. It assumes a linear relationship between input features and the target.
+4. **Logistic Regression**:
+   - Despite its name, it is a classification algorithm (binary). It uses a logistic function (sigmoid) to model the probability of the output.
+5. **Multilayer Perceptron (MLP)**:
+   - A neural network with at least one hidden layer (beyond the input and output layers). It can learn non-linear relationships. Uses activation functions like sigmoid, tanh, or ReLU.
+6. **Support Vector Machines (SVM)**:
+   - A classifier that finds the optimal hyperplane to separate classes. Can be linear or non-linear (using kernel trick).
+7. **Decision Trees**:
+   - A tree-like model of decisions. Easy to understand and interpret. Can be used for both classification and regression.
+8. **Random Forests**:
+   - An ensemble method that uses multiple decision trees to improve performance and reduce overfitting.
+9. **Convolutional Neural Networks (CNN)**:
+   - Specialized for processing grid-like data (e.g., images). Uses convolutional layers to extract features. Examples: LeNet, AlexNet, VGG, ResNet.
+   - **AlexNet**: A specific CNN architecture that won the ImageNet competition in 2012. It has multiple convolutional layers, max-pooling, and fully connected layers. It was deeper and used ReLU activations and dropout to handle overfitting.
+10. **Recurrent Neural Networks (RNN)**:
+    - Designed for sequential data (e.g., time series, text). They have loops to allow information to persist. However, they suffer from vanishing/exploding gradients.
+    - **Long Short-Term Memory (LSTM)**: A type of RNN that has memory cells and gating mechanisms to better capture long-term dependencies.
+    - **Gated Recurrent Unit (GRU)**: A variant of LSTM with a simplified structure.
+11. **Feedforward Neural Networks (FNN)**:
+    - This term is sometimes used interchangeably with MLP. It refers to neural networks where connections do not form cycles. The information moves in one direction: forward.
+12. **Deep Neural Networks (DNN)**:
+    - A general term for neural networks with multiple hidden layers (deep architectures). It can include CNNs, RNNs, and deep MLPs.
+13. **Transformer**:
+    - A model architecture that relies on self-attention mechanisms. It has become the foundation for many state-of-the-art models in NLP (e.g., BERT, GPT). It is highly parallelizable and can capture long-range dependencies.
+14. **Generative Adversarial Networks (GAN)**:
+    - Consists of two networks (generator and discriminator) that compete against each other. Used for generating realistic data.
+15. **Autoencoders**:
+    - Unsupervised learning models that aim to learn efficient representations of data. They consist of an encoder and a decoder.
+We have listed the models in roughly increasing order of complexity. Note that within each category there can be variations and complexities (e.g., ResNet is a very deep CNN, but we listed AlexNet as an example of an early deep CNN).
+
 ### **1. Foundational Linear Models**
 - **MP Neuron (McCulloch-Pitts, 1943)**:  
   - *Concept*: Simplest artificial neuron. Binary inputs/output (0/1), fixed weights, threshold-based logic gate.  

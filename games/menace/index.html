@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Menace - Tic-Tac-Toe</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='css/main.css'>
+</head>
+<body>
+    <h1>Menace : Rudimentary AI - Donald Michie in 1960.</h1>
+    <div id="gameBoard"></div>
+    <script src='js/main.js'></script>
+    <script>
+        const board = new Board('#gameBoard', [], 4);
+        //const player1 = new HumanPlayer('o');
+        
+        const player1 = new Menace(board, 'o');
+        const player2 = new Menace(board, 'x');
+
+        board.setPlayers(player1, player2);
+
+        window.board = board;
+        window.player1 = player1;
+        window.player2 = player2;
+    </script>
+</body>
+</html>

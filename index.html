@@ -284,6 +284,8 @@
             border-color: #007bff;
         }
     </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
 </head>
 
 <body>
@@ -377,6 +379,10 @@
                 ml: {
                     pathPrefix: 'data/ml',
                     files: ['1-data', '2-task', '3-model', '4-loss', '5-learn', '6-evaluate']
+                },
+                ml_ofl: {
+                    pathPrefix: 'data/ofl-ml/8-mp-neuron',
+                    files: ['2-model']
                 }
             };
 
@@ -534,7 +540,7 @@
                 const versionSelector = createVersionSelector();
                 attachRendererEventListeners();
 
-                const initialVersion = 'concepts';
+                const initialVersion = 'ml_ofl';
                 if (contentConfigurations[initialVersion]) {
                     versionSelector.value = initialVersion;
                     const config = contentConfigurations[initialVersion];

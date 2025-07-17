@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul, li {
+    list-style: none;
+}
+
+:focus {
+    outline: none;
+}
+
+.board {
+    display: grid;
+    gap: 5px;
+    width: max-content;
+    margin: 20px auto;
+}
+
+.board_cell {
+    background-color: #f0f0f0;
+    border: 2px solid #444;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s;
+    width: 80px;
+    height: 80px;
+}
+
+.board_cell:hover {
+    background-color: #ddd;
+}

@@ -97,6 +97,7 @@ const MarkdownLoader = (function() {
                     break;
                 case 'markdown-it':
                     await _loadScript('https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js');
+                    await _loadScript('https://cdn.jsdelivr.net/npm/markdown-it-katex@2.0.3/index.min.js');
                     if (typeof window.markdownit !== 'undefined') {
                         const md = new window.markdownit({
                             html: true,
@@ -112,7 +113,7 @@ const MarkdownLoader = (function() {
                             }
                             return defaultFenceRender(tokens, idx, options, env, self);
                         };
-
+//mdi.use(markdownItLatex)
                         rendererInstance = md;
                     } else {
                         throw new Error("markdown-it.js global object 'markdownit' not found.");
